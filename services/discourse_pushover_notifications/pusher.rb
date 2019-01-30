@@ -12,7 +12,7 @@ module DiscoursePushoverNotifications
         ),
         message: payload[:excerpt],
         url: payload[:post_url],
-        token: SiteSetting.pushover_api_key,
+        token: SiteSetting.pushover_notifications_api_key,
         user: user.custom_fields[DiscoursePushoverNotifications::PLUGIN_NAME]
       }
 
@@ -34,15 +34,9 @@ module DiscoursePushoverNotifications
       user.save_custom_fields(true)
     end
 
-    def self.unsubscribe(user, subscription)
+    def self.unsubscribe(user)
       user.custom_fields.delete(DiscoursePushoverNotifications::PLUGIN_NAME)
       user.save_custom_fields(true)
-    end
-
-    protected
-
-    def self.extract_unique_id(subscription)
-      subscription
     end
   end
 end

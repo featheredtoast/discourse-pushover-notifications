@@ -19,6 +19,7 @@ after_initialize do
   end
 
   User.register_custom_field_type(DiscoursePushoverNotifications::PLUGIN_NAME, :json)
+  whitelist_staff_user_custom_field DiscoursePushoverNotifications::PLUGIN_NAME
 
   DiscoursePushoverNotifications::Engine.routes.draw do
     post '/subscribe' => 'push#subscribe'
@@ -43,7 +44,7 @@ after_initialize do
     end
 
     def unsubscribe
-      DiscoursePushoverNotifications::Pusher.unsubscribe(current_user, push_params)
+      DiscoursePushoverNotifications::Pusher.unsubscribe(current_user)
       render json: success_json
     end
 
