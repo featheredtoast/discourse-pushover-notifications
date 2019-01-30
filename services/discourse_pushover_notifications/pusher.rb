@@ -1,6 +1,6 @@
 require "net/https"
 
-module DiscoursePushNotifications
+module DiscoursePushoverNotifications
   class Pusher
     def self.push(user, payload)
       message = {
@@ -13,7 +13,7 @@ module DiscoursePushNotifications
         message: payload[:excerpt],
         url: payload[:post_url],
         token: SiteSetting.pushover_api_key,
-        user: user.custom_fields[DiscoursePushNotifications::PLUGIN_NAME]
+        user: user.custom_fields[DiscoursePushoverNotifications::PLUGIN_NAME]
       }
 
       url = URI.parse("https://api.pushover.net/1/messages.json")
@@ -26,16 +26,16 @@ module DiscoursePushNotifications
     end
 
     def self.clear_subscriptions(user)
-      user.custom_fields.delete(DiscoursePushNotifications::PLUGIN_NAME)
+      user.custom_fields.delete(DiscoursePushoverNotifications::PLUGIN_NAME)
     end
 
     def self.subscribe(user, subscription)
-      user.custom_fields[DiscoursePushNotifications::PLUGIN_NAME] = subscription
+      user.custom_fields[DiscoursePushoverNotifications::PLUGIN_NAME] = subscription
       user.save_custom_fields(true)
     end
 
     def self.unsubscribe(user, subscription)
-      user.custom_fields.delete(DiscoursePushNotifications::PLUGIN_NAME)
+      user.custom_fields.delete(DiscoursePushoverNotifications::PLUGIN_NAME)
       user.save_custom_fields(true)
     end
 
