@@ -1,0 +1,19 @@
+{{#if showPushoverNotification}}
+  <div class='control-group pushover-notifications'>
+    <label class="control-label">{{i18n 'discourse_pushover_notifications.title'}}</label>
+    <div class="controls">
+      <div>
+        {{#if pushoverNotificationSubscribed}}
+          {{d-button icon="bell-slash-o" label="discourse_pushover_notifications.disable" action="unsubscribe"}}
+        {{else}}
+          {{input value=subscription}}
+          {{d-button icon="bell-o" label="discourse_pushover_notifications.enable" action="subscribe"}}
+        {{/if}}
+      </div>
+    </div>
+
+    <div class='instructions'>
+      {{instructions}}
+    </div>
+  </div>
+{{/if}}

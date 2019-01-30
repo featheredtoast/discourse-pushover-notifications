@@ -1,0 +1,6 @@
+plugins:
+  pushover_notifications_enabled:
+    default: false
+    client: true
+  pushover_api_key:
+    default: ''
