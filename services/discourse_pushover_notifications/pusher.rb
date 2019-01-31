@@ -11,7 +11,7 @@ module DiscoursePushoverNotifications
           username: payload[:username]
         ),
         message: payload[:excerpt],
-        url: payload[:post_url],
+        url: "#{Discourse.base_url}/payload[:post_url]",
         token: SiteSetting.pushover_notifications_api_key,
         user: user.custom_fields[DiscoursePushoverNotifications::PLUGIN_NAME]
       }

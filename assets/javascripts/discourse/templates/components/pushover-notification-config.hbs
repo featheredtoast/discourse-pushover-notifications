@@ -4,10 +4,10 @@
     <div class="controls">
       <div>
         {{#if pushoverNotificationSubscribed}}
-          {{d-button icon="bell-slash-o" label="discourse_pushover_notifications.disable" action="unsubscribe"}}
+          {{d-button icon="bell-slash-o" label="discourse_pushover_notifications.disable" action=(action "unsubscribe")}}
         {{else}}
           {{input value=subscription}}
-          {{d-button icon="bell-o" label="discourse_pushover_notifications.enable" action="subscribe"}}
+          {{d-button icon="bell-o" label="discourse_pushover_notifications.enable" action=(action "subscribe")}}
         {{/if}}
       </div>
     </div>
