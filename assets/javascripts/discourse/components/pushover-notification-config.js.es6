@@ -11,21 +11,33 @@ export default Ember.Component.extend({
     return this.siteSettings.pushover_notifications_enabled;
   },
 
-  @computed
-  pushoverNotificationSubscribed() {
-    return (
+  calculateSubscribed() {
+    this.set(
+      "pushoverNotificationSubscribed",
       Discourse.User.current().custom_fields.discourse_pushover_notifications !=
-      null
+        null
     );
   },
 
+  pushoverNotificationSubscribed:
+    Discourse.User.current().custom_fields.discourse_pushover_notifications !=
+    null,
+
   actions: {
     subscribe() {
-      subscribePushoverNotification(this.get("subscription"));
+      subscribePushoverNotification(this.get("subscription")).then(() => {
+        Discourse.User.current().custom_fields.discourse_pushover_notifications = this.get(
+          "subscription"
+        );
+        this.calculateSubscribed();
+      });
     },
 
     unsubscribe() {
-      unsubscribePushoverNotification();
+      unsubscribePushoverNotification().then(() => {
+        Discourse.User.current().custom_fields.discourse_pushover_notifications = null;
+        this.calculateSubscribed();
+      });
     }
   }
 });
