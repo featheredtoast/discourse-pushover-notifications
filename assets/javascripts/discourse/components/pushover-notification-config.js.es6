@@ -11,6 +11,8 @@ export default Ember.Component.extend({
     return this.siteSettings.pushover_notifications_enabled;
   },
 
+  disabled: Ember.computed.empty("subscription"),
+
   calculateSubscribed() {
     this.set(
       "pushoverNotificationSubscribed",
@@ -19,16 +21,21 @@ export default Ember.Component.extend({
     );
   },
 
-  pushoverNotificationSubscribed:
-    Discourse.User.current().custom_fields.discourse_pushover_notifications !=
-    null,
+  pushoverNotificationSubscribed: null,
+
+  init() {
+    this._super(...arguments);
+    this.set(
+      "pushoverNotificationSubscribed",
+      Discourse.User.current().custom_fields.discourse_pushover_notifications !=
+        null
+    );
+  },
 
   actions: {
     subscribe() {
-      subscribePushoverNotification(this.get("subscription")).then(() => {
-        Discourse.User.current().custom_fields.discourse_pushover_notifications = this.get(
-          "subscription"
-        );
+      subscribePushoverNotification(this.subscription).then(() => {
+        Discourse.User.current().custom_fields.discourse_pushover_notifications = this.subscription;
         this.calculateSubscribed();
       });
     },

@@ -7,8 +7,8 @@
           {{d-button icon="bell-slash-o" label="discourse_pushover_notifications.disable" action=(action "unsubscribe")}}
         {{else}}
           {{input placeholder=(i18n "discourse_pushover_notifications.api_key_placeholder") value=subscription}}
-          {{d-button icon="bell-o" label="discourse_pushover_notifications.enable" action=(action "subscribe")}}
-          <div class="instructions">{{i18n "discourse_pushover_notifications.instructions"}}</div>
+          {{d-button icon="bell-o" label="discourse_pushover_notifications.enable" action=(action "subscribe") disabled=disabled}}
+          <div class="instructions">{{{i18n "discourse_pushover_notifications.instructions"}}}</div>
         {{/if}}
       </div>
     </div>
