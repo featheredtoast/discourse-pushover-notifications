@@ -4,3 +4,5 @@ en:
       title: "Pushover Notifications"
       disable: "Disable Pushover Notifications"
       enable: "Enable Pushover Notifications"
+      api_key_placeholder: "Enter your user key"
+      instructions: "Copy your user key from your <a href='https://pushover.net/' target='_blank'>pushover dashboard</a>"
