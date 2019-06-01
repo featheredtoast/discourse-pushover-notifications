@@ -3,6 +3,9 @@ en:
     pushover_notifications_enabled: Enable pushover notifications?
     pushover_notifications_api_key: Your Pushover API key
   discourse_pushover_notifications:
+    confirm_title: 'Pushover Notifications - %{site_title}'
+    confirm_body: 'Pushover notifications have been enabled!'
+    subscribe_error: 'Could not subscribe. Is your user key correct?'
     popup:
       mentioned: '%{username} mentioned you in "%{topic}" - %{site_title}'
       group_mentioned: '%{username} mentioned you in "%{topic}" - %{site_title}'

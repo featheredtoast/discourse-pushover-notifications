@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # name: discourse-pushover-notifications
 # about: Plugin for integrating pushover notifications
 # version: 0.1.0
@@ -40,7 +42,11 @@ after_initialize do
 
     def subscribe
       DiscoursePushoverNotifications::Pusher.subscribe(current_user, push_params)
-      render json: success_json
+      if DiscoursePushoverNotifications::Pusher.confirm_subscribe(current_user)
+        render json: success_json
+      else
+        render json: { failed: 'FAILED', error: I18n.t("discourse_pushover_notifications.subscribe_error") }
+      end
     end
 
     def unsubscribe
@@ -63,7 +69,7 @@ after_initialize do
 
   DiscourseEvent.on(:user_logged_out) do |user|
     if SiteSetting.pushover_notifications_enabled?
-      DiscoursePushoverNotifications::Pusher.clear_subscriptions(user)
+      DiscoursePushoverNotifications::Pusher.unsubscribe(user)
       user.save_custom_fields(true)
     end
   end

@@ -11,7 +11,10 @@ export default Ember.Component.extend({
     return this.siteSettings.pushover_notifications_enabled;
   },
 
-  disabled: Ember.computed.empty("subscription"),
+  has_subscription: Ember.computed.empty("subscription"),
+  disabled: Ember.computed.or("has_subscription", "loading"),
+  loading: false,
+  errorMessage: null,
 
   calculateSubscribed() {
     this.set(
@@ -25,26 +28,47 @@ export default Ember.Component.extend({
 
   init() {
     this._super(...arguments);
-    this.set(
-      "pushoverNotificationSubscribed",
-      Discourse.User.current().custom_fields.discourse_pushover_notifications !=
-        null
-    );
+    this.setProperties({
+      pushoverNotificationSubscribed:
+        Discourse.User.current().custom_fields
+          .discourse_pushover_notifications != null,
+      errorMessage: null
+    });
   },
 
   actions: {
     subscribe() {
-      subscribePushoverNotification(this.subscription).then(() => {
-        Discourse.User.current().custom_fields.discourse_pushover_notifications = this.subscription;
-        this.calculateSubscribed();
+      this.setProperties({
+        loading: true,
+        errorMessage: null
       });
+      subscribePushoverNotification(this.subscription)
+        .then(response => {
+          if (response.success) {
+            Discourse.User.current().custom_fields.discourse_pushover_notifications = this.subscription;
+            this.calculateSubscribed();
+          } else {
+            this.set("errorMessage", response.error);
+          }
+        })
+        .finally(() => this.set("loading", false));
     },
 
     unsubscribe() {
-      unsubscribePushoverNotification().then(() => {
-        Discourse.User.current().custom_fields.discourse_pushover_notifications = null;
-        this.calculateSubscribed();
+      this.setProperties({
+        loading: true,
+        errorMessage: null
       });
+      unsubscribePushoverNotification()
+        .then(response => {
+          if (response.success) {
+            Discourse.User.current().custom_fields.discourse_pushover_notifications = null;
+            this.calculateSubscribed();
+          } else {
+            this.set("errorMessage", response.error);
+          }
+        })
+        .finally(() => this.set("loading", false));
     }
   }
 });
