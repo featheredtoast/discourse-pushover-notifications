@@ -1,4 +1,4 @@
-# discourse-pushover-notifications
+# [discourse-pushover-notifications](https://meta.discourse.org/t/pushover-notifcations/119258)
 Plugin for integrating [Pushover](https://pushover.net/) notifications.
 
 This allows notifications to be sent over pushover, which allows for push-notification support for iOS, through Pushover.
