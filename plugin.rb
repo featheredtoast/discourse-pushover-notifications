@@ -76,7 +76,7 @@ after_initialize do
 
   require_dependency 'jobs/base'
   module ::Jobs
-    class SendPushoverNotifications < Jobs::Base
+    class SendPushoverNotifications < ::Jobs::Base
       def execute(args)
         return unless SiteSetting.pushover_notifications_enabled?
 
