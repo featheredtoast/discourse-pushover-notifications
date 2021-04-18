@@ -21,7 +21,7 @@ after_initialize do
   end
 
   User.register_custom_field_type(DiscoursePushoverNotifications::PLUGIN_NAME, :json)
-  whitelist_staff_user_custom_field DiscoursePushoverNotifications::PLUGIN_NAME
+  allow_staff_user_custom_field DiscoursePushoverNotifications::PLUGIN_NAME
 
   DiscoursePushoverNotifications::Engine.routes.draw do
     post '/subscribe' => 'push#subscribe'
