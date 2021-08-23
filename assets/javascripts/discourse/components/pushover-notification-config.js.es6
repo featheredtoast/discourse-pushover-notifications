@@ -1,4 +1,5 @@
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
+
 
 import {
   subscribe as subscribePushoverNotification,
@@ -6,7 +7,7 @@ import {
 } from "discourse/plugins/discourse-pushover-notifications/discourse/lib/pushover-notifications";
 
 export default Ember.Component.extend({
-  @computed
+  @discourseComputed
   showPushoverNotification() {
     return this.siteSettings.pushover_notifications_enabled;
   },
