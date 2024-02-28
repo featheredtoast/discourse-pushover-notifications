@@ -1,10 +1,9 @@
-import { default as discourseComputed } from "discourse-common/utils/decorators";
-import { empty, or } from "@ember/object/computed";
 import Component from "@ember/component";
-
+import { empty, or } from "@ember/object/computed";
+import { default as discourseComputed } from "discourse-common/utils/decorators";
 import {
   subscribe as subscribePushoverNotification,
-  unsubscribe as unsubscribePushoverNotification
+  unsubscribe as unsubscribePushoverNotification,
 } from "discourse/plugins/discourse-pushover-notifications/discourse/lib/pushover-notifications";
 
 export default Component.extend({
@@ -21,8 +20,7 @@ export default Component.extend({
   calculateSubscribed() {
     this.set(
       "pushoverNotificationSubscribed",
-      this.currentUser.custom_fields.discourse_pushover_notifications !=
-        null
+      this.currentUser.custom_fields.discourse_pushover_notifications != null
     );
   },
 
@@ -32,9 +30,8 @@ export default Component.extend({
     this._super(...arguments);
     this.setProperties({
       pushoverNotificationSubscribed:
-        this.currentUser.custom_fields
-          .discourse_pushover_notifications != null,
-      errorMessage: null
+        this.currentUser.custom_fields.discourse_pushover_notifications != null,
+      errorMessage: null,
     });
   },
 
@@ -42,12 +39,13 @@ export default Component.extend({
     subscribe() {
       this.setProperties({
         loading: true,
-        errorMessage: null
+        errorMessage: null,
       });
       subscribePushoverNotification(this.subscription)
-        .then(response => {
+        .then((response) => {
           if (response.success) {
-            this.currentUser.custom_fields.discourse_pushover_notifications = this.subscription;
+            this.currentUser.custom_fields.discourse_pushover_notifications =
+              this.subscription;
             this.calculateSubscribed();
           } else {
             this.set("errorMessage", response.error);
@@ -59,18 +57,19 @@ export default Component.extend({
     unsubscribe() {
       this.setProperties({
         loading: true,
-        errorMessage: null
+        errorMessage: null,
       });
       unsubscribePushoverNotification()
-        .then(response => {
+        .then((response) => {
           if (response.success) {
-            this.currentUser.custom_fields.discourse_pushover_notifications = null;
+            this.currentUser.custom_fields.discourse_pushover_notifications =
+              null;
             this.calculateSubscribed();
           } else {
             this.set("errorMessage", response.error);
           }
         })
         .finally(() => this.set("loading", false));
-    }
-  }
+    },
+  },
 });
