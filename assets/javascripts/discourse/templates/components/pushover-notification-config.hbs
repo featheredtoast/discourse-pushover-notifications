@@ -1,19 +1,39 @@
 {{#if showPushoverNotification}}
-  <div class='control-group pushover-notifications'>
-    <label class="control-label">{{i18n 'discourse_pushover_notifications.title'}}</label>
+  <div class="control-group pushover-notifications">
+    <label class="control-label">{{i18n
+        "discourse_pushover_notifications.title"
+      }}</label>
     {{#if errorMessage}}
       <div class="alert alert-error">{{errorMessage}}</div>
     {{/if}}
     <div class="controls">
       <div>
         {{#if pushoverNotificationSubscribed}}
-          {{d-button icon="bell-slash-o" label="discourse_pushover_notifications.disable" action=(action "unsubscribe") disabled=loading}}
-        {{conditional-loading-spinner size="small" condition=loading}}
-        {{else}}
-          {{input placeholder=(i18n "discourse_pushover_notifications.api_key_placeholder") value=subscription disabled=loading}}
-          {{d-button icon="bell-o" label="discourse_pushover_notifications.enable" action=(action "subscribe") disabled=disabled}}
+          {{d-button
+            icon="bell-slash-o"
+            label="discourse_pushover_notifications.disable"
+            action=(action "unsubscribe")
+            disabled=loading
+          }}
           {{conditional-loading-spinner size="small" condition=loading}}
-          <div class="instructions">{{{i18n "discourse_pushover_notifications.instructions"}}}</div>
+        {{else}}
+          {{input
+            placeholder=(i18n
+              "discourse_pushover_notifications.api_key_placeholder"
+            )
+            value=subscription
+            disabled=loading
+          }}
+          {{d-button
+            icon="bell-o"
+            label="discourse_pushover_notifications.enable"
+            action=(action "subscribe")
+            disabled=disabled
+          }}
+          {{conditional-loading-spinner size="small" condition=loading}}
+          <div class="instructions">{{{i18n
+              "discourse_pushover_notifications.instructions"
+            }}}</div>
         {{/if}}
       </div>
     </div>
