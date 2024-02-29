@@ -61,7 +61,7 @@ after_initialize do
     end
   end
 
-  DiscourseEvent.on(:post_notification_alert) do |user, payload|
+  DiscourseEvent.on(:push_notification) do |user, payload|
     if SiteSetting.pushover_notifications_enabled?
       Jobs.enqueue(:send_pushover_notifications, user_id: user.id, payload: payload)
     end
