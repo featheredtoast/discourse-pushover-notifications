@@ -1,19 +1,20 @@
 import { default as discourseComputed } from "discourse-common/utils/decorators";
-
+import Component from "@ember/component";
+import { empty, or } from '@ember/object/computed';
 
 import {
   subscribe as subscribePushoverNotification,
   unsubscribe as unsubscribePushoverNotification
 } from "discourse/plugins/discourse-pushover-notifications/discourse/lib/pushover-notifications";
 
-export default Ember.Component.extend({
+export default Component.extend({
   @discourseComputed
   showPushoverNotification() {
     return this.siteSettings.pushover_notifications_enabled;
   },
 
-  has_subscription: Ember.computed.empty("subscription"),
-  disabled: Ember.computed.or("has_subscription", "loading"),
+  has_subscription: empty("subscription"),
+  disabled: or("has_subscription", "loading"),
   loading: false,
   errorMessage: null,
 
