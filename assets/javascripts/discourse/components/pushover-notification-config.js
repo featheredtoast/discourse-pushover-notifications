@@ -1,27 +1,26 @@
+import Component from "@ember/component";
+import { empty, or } from "@ember/object/computed";
 import { default as discourseComputed } from "discourse-common/utils/decorators";
-
-
 import {
   subscribe as subscribePushoverNotification,
-  unsubscribe as unsubscribePushoverNotification
+  unsubscribe as unsubscribePushoverNotification,
 } from "discourse/plugins/discourse-pushover-notifications/discourse/lib/pushover-notifications";
 
-export default Ember.Component.extend({
+export default Component.extend({
   @discourseComputed
   showPushoverNotification() {
     return this.siteSettings.pushover_notifications_enabled;
   },
 
-  has_subscription: Ember.computed.empty("subscription"),
-  disabled: Ember.computed.or("has_subscription", "loading"),
+  has_subscription: empty("subscription"),
+  disabled: or("has_subscription", "loading"),
   loading: false,
   errorMessage: null,
 
   calculateSubscribed() {
     this.set(
       "pushoverNotificationSubscribed",
-      this.currentUser.custom_fields.discourse_pushover_notifications !=
-        null
+      this.currentUser.custom_fields.discourse_pushover_notifications != null
     );
   },
 
@@ -31,9 +30,8 @@ export default Ember.Component.extend({
     this._super(...arguments);
     this.setProperties({
       pushoverNotificationSubscribed:
-        this.currentUser.custom_fields
-          .discourse_pushover_notifications != null,
-      errorMessage: null
+        this.currentUser.custom_fields.discourse_pushover_notifications != null,
+      errorMessage: null,
     });
   },
 
@@ -41,12 +39,13 @@ export default Ember.Component.extend({
     subscribe() {
       this.setProperties({
         loading: true,
-        errorMessage: null
+        errorMessage: null,
       });
       subscribePushoverNotification(this.subscription)
-        .then(response => {
+        .then((response) => {
           if (response.success) {
-            this.currentUser.custom_fields.discourse_pushover_notifications = this.subscription;
+            this.currentUser.custom_fields.discourse_pushover_notifications =
+              this.subscription;
             this.calculateSubscribed();
           } else {
             this.set("errorMessage", response.error);
@@ -58,18 +57,19 @@ export default Ember.Component.extend({
     unsubscribe() {
       this.setProperties({
         loading: true,
-        errorMessage: null
+        errorMessage: null,
       });
       unsubscribePushoverNotification()
-        .then(response => {
+        .then((response) => {
           if (response.success) {
-            this.currentUser.custom_fields.discourse_pushover_notifications = null;
+            this.currentUser.custom_fields.discourse_pushover_notifications =
+              null;
             this.calculateSubscribed();
           } else {
             this.set("errorMessage", response.error);
           }
         })
         .finally(() => this.set("loading", false));
-    }
-  }
+    },
+  },
 });
