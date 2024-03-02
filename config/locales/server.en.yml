@@ -14,3 +14,4 @@ en:
       posted: '%{username} posted in "%{topic}" - %{site_title}'
       private_message: '%{username} sent you a private message in "%{topic}" - %{site_title}'
       linked: '%{username} linked to your post from "%{topic}" - %{site_title}'
+      chat_message: '%{username} said: "%{message}" - %{site_title}'
