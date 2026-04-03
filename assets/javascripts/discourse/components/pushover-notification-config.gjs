@@ -1,0 +1,111 @@
+import Component from "@glimmer/component";
+import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import { action } from "@ember/object";
+import DButton from "discourse/components/d-button";
+import { service } from "@ember/service";
+import { tracked } from "@glimmer/tracking";
+import { Input } from "@ember/component";
+import { i18n } from "discourse-i18n";
+import {
+  subscribe as subscribePushoverNotification,
+  unsubscribe as unsubscribePushoverNotification,
+} from "discourse/plugins/discourse-pushover-notifications/discourse/lib/pushover-notifications";
+
+export default class PushoverNotificationConfig extends Component {
+  @service currentUser;
+  @tracked loading = false;
+  @tracked errorMessage;
+
+  get showPushoverNotification() {
+    return this.siteSettings.pushover_notifications_enabled;
+  }
+
+  get has_subscription() {
+    empty("subscription");
+  }
+  get disabled() {
+    if(this.has_subscription || this.loading) {
+      return true;
+    }
+    return false;
+  }
+  get pushoverNotificationSubscribed() {
+    this.currentUser.custom_fields.discourse_pushover_notifications != null;
+  }
+
+  @action
+  subscribe() {
+    this.loading = true;
+    this.errorMessage = null;
+    subscribePushoverNotification(this.subscription)
+      .then((response) => {
+        if (response.success) {
+          this.currentUser.custom_fields.discourse_pushover_notifications =
+            this.subscription;
+        } else {
+          this.errorMessage = response.error;
+        }
+      })
+      .finally(() => this.loading = false);
+  }
+  unsubscribe() {
+    this.setProperties({
+      loading: true,
+      errorMessage: null,
+    });
+    unsubscribePushoverNotification()
+      .then((response) => {
+        if (response.success) {
+          this.currentUser.custom_fields.discourse_pushover_notifications =
+            null;
+        } else {
+          this.errorMessage = response.error;
+        }
+      })
+      .finally(() => this.loading = false);
+  }
+  <template>
+    {{#if this.showPushoverNotification}}
+      <div class="control-group pushover-notifications">
+        <label class="control-label">{{i18n
+            "discourse_pushover_notifications.title"
+          }}</label>
+        {{#if this.errorMessage}}
+          <div class="alert alert-error">{{this.errorMessage}}</div>
+        {{/if}}
+        <div class="controls">
+          <div>
+            {{#if this.pushoverNotificationSubscribed}}
+              <DButton
+                @icon="bell-slash-o"
+                @label="discourse_pushover_notifications.disable"
+                @action={{this.unsubscribe}}
+                @disabled={{this.loading}}
+              />
+              <ConditionalLoadingSpinner @size="small" @condition={{this.loading}}/>
+            {{else}}
+              <Input
+                @type="text"
+                @placeholder={{i18n
+                  "discourse_pushover_notifications.api_key_placeholder"
+                }}
+                @value={{this.subscription}}
+                disabled={{this.loading}}
+              />
+              <DButton
+                @icon="bell-o"
+                @label="discourse_pushover_notifications.enable"
+                @action={{this.subscribe}}
+                @disabled={{this.disabled}}
+              />
+              <ConditionalLoadingSpinner @size="small" @condition={{this.loading}}/>
+              <div class="instructions">{{{i18n
+                  "discourse_pushover_notifications.instructions"
+                }}}</div>
+            {{/if}}
+          </div>
+        </div>
+      </div>
+    {{/if}}
+  </template>
+}
