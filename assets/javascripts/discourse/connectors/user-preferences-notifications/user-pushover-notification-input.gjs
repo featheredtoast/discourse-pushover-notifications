@@ -11,8 +11,9 @@ import {
   unsubscribe as unsubscribePushoverNotification,
 } from "discourse/plugins/discourse-pushover-notifications/discourse/lib/pushover-notifications";
 
-export default class PushoverNotificationConfig extends Component {
+export default class UserPushoverNotificationInput extends Component {
   @service currentUser;
+  @service siteSettings;
   @tracked loading = false;
   @tracked errorMessage;
 
@@ -21,7 +22,7 @@ export default class PushoverNotificationConfig extends Component {
   }
 
   get has_subscription() {
-    empty("subscription");
+    return this.subscription?.length > 0;
   }
   get disabled() {
     if(this.has_subscription || this.loading) {
