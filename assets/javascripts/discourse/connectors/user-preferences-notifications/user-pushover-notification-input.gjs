@@ -76,7 +76,7 @@ export default class UserPushoverNotificationInput extends Component {
           <div>
             {{#if this.pushoverNotificationSubscribed}}
               <DButton
-                @icon="bell-slash-o"
+                @icon="bell-slash"
                 @label="discourse_pushover_notifications.disable"
                 @action={{this.unsubscribe}}
                 @disabled={{this.loading}}
@@ -92,7 +92,7 @@ export default class UserPushoverNotificationInput extends Component {
                 disabled={{this.loading}}
               />
               <DButton
-                @icon="bell-o"
+                @icon="bell"
                 @label="discourse_pushover_notifications.enable"
                 @action={{this.subscribe}}
                 @disabled={{this.disabled}}
