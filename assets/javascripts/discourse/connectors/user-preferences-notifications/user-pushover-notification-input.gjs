@@ -16,16 +16,14 @@ export default class UserPushoverNotificationInput extends Component {
   @service siteSettings;
   @tracked loading = false;
   @tracked errorMessage;
+  @tracked subscription = "";
 
   get showPushoverNotification() {
     return this.siteSettings.pushover_notifications_enabled;
   }
 
-  get has_subscription() {
-    return this.subscription?.length > 0;
-  }
   get disabled() {
-    if(this.has_subscription || this.loading) {
+    if(this.subscription?.length === 0 || this.loading) {
       return true;
     }
     return false;
