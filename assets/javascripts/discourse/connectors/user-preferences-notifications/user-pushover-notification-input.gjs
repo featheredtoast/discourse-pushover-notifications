@@ -17,6 +17,7 @@ export default class UserPushoverNotificationInput extends Component {
   @tracked loading = false;
   @tracked errorMessage;
   @tracked subscription = "";
+  @tracked subscribed = this.currentUser.custom_fields.discourse_pushover_notifications != null;
 
   get showPushoverNotification() {
     return this.siteSettings.pushover_notifications_enabled;
@@ -28,10 +29,6 @@ export default class UserPushoverNotificationInput extends Component {
     }
     return false;
   }
-  get pushoverNotificationSubscribed() {
-    this.currentUser.custom_fields.discourse_pushover_notifications != null;
-  }
-
   @action
   subscribe() {
     this.loading = true;
@@ -39,24 +36,21 @@ export default class UserPushoverNotificationInput extends Component {
     subscribePushoverNotification(this.subscription)
       .then((response) => {
         if (response.success) {
-          this.currentUser.custom_fields.discourse_pushover_notifications =
-            this.subscription;
+          this.subscribed = true;
         } else {
           this.errorMessage = response.error;
         }
       })
       .finally(() => this.loading = false);
   }
+  @action
   unsubscribe() {
-    this.setProperties({
-      loading: true,
-      errorMessage: null,
-    });
+    this.loading = true;
+    this.errorMessage = null;
     unsubscribePushoverNotification()
       .then((response) => {
         if (response.success) {
-          this.currentUser.custom_fields.discourse_pushover_notifications =
-            null;
+          this.subscribed = false;
         } else {
           this.errorMessage = response.error;
         }
@@ -74,7 +68,7 @@ export default class UserPushoverNotificationInput extends Component {
         {{/if}}
         <div class="controls">
           <div>
-            {{#if this.pushoverNotificationSubscribed}}
+            {{#if this.subscribed}}
               <DButton
                 @icon="bell-slash"
                 @label="discourse_pushover_notifications.disable"
